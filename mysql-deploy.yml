@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: mysql
+  name: mysql
+  namespace: jenkins
+spec:
+  ports:
+  - port: 3306
+    protocol: TCP
+    targetPort: 3306
+  selector:
+    app: mysql
+  sessionAffinity: None
+  type: ClusterIP
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mysql
+  name: mysql
+  namespace: jenkins
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: mysql
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - image: harbor.t2cp.com/t2cp/mysql:5.7
+        imagePullPolicy: Always
+        name: mysql
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: aaaaaa
+        resources: {}
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: sqlfile
+          mountPath: /root/
+        - name: mysql
+          mountPath: /var/lib/mysql
+      dnsPolicy: ClusterFirst
+      nodeSelector:
+        node: node109
+      restartPolicy: Always
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: sqlfile
+        configMap: 
+          name: t2cp.sql
+          defaultMode: 0555
+      - name: mysql
+        emptyDir: {} 
