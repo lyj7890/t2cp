@@ -1,0 +1,31 @@
+app:
+  address: 0.0.0.0
+  port: 9010
+  kubeFile: /tmp/config
+  page: 20
+
+mysql:
+  mysqlConnection: root:aaaaaa@(192.168.131.50:3306)/t2cp?charset=utf8&parseTime=True&loc=Local
+  maxIdleConns: 1000
+  maxOpenConns: 2000
+  logMode: true
+
+auth:
+  allowAll: false
+  ExpiresAt: 7200
+
+rancher:
+  Url:       "https://192.168.131.50/v3"
+  AccessKey: "token-crkhs"
+  SecretKey: "jg7qqvxrh67ndj8qmjzhvjccvzvxqz4c2xcxnzb7rgl7ch4r8g2vb2"
+  Insecure: true
+  CertPath:  "rancher.cer"
+
+websocket:
+  Url:       "http://127.0.0.1:9010"
+  Path:      "/api/v1/ws/"
+  Token:     ""
+  WebsocketShell:  "ws://127.0.0.1:9010/api/v1/ws/socket.io"
+
+ignore:
+  url: "/api/v1/login,/api/v1/logout,info,ws,misc,websocket"
