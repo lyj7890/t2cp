@@ -42,7 +42,7 @@ spec:
         app: bizsvc-develop
     spec:
       containers:
-      - image: harbor.t2cp.com/t2cp/bizsvc-develop:latest
+      - image: harbor.t2cp.com/t2cp-dev/bizsvc-develop:latest
         imagePullPolicy: Always
         name: bizsvc-develop
         resources: {}
