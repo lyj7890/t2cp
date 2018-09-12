@@ -30,7 +30,7 @@ spec:
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app: bizsvc-dev
+      app: bizsvc-develop
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -44,7 +44,7 @@ spec:
       containers:
       - image: harbor.t2cp.com/t2cp/bizsvc-develop:latest
         imagePullPolicy: Always
-        name: bizsvc-dev
+        name: bizsvc-develop
         resources: {}
       dnsPolicy: ClusterFirst
       nodeSelector:
