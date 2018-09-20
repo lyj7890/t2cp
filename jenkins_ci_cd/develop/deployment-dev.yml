@@ -2,8 +2,8 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: bizsvc-dev
-  name: bizsvc-dev
+    app: bizsvc-develop
+  name: bizsvc-develop
   namespace: jenkins
 spec:
   ports:
@@ -12,7 +12,7 @@ spec:
     protocol: TCP
     targetPort: 9010
   selector:
-    app: bizsvc-dev
+    app: bizsvc-develop
   sessionAffinity: None
   type: NodePort
 
@@ -21,8 +21,8 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   labels:
-    app: bizsvc-dev
-  name: bizsvc-dev
+    app: bizsvc-develop
+  name: bizsvc-develop
   namespace: jenkins
 spec:
   progressDeadlineSeconds: 600
@@ -30,7 +30,7 @@ spec:
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app: bizsvc-dev
+      app: bizsvc-develop
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -39,13 +39,24 @@ spec:
   template:
     metadata:
       labels:
-        app: bizsvc-dev
+        app: bizsvc-develop
     spec:
       containers:
-      - image: harbor.t2cp.com/t2cp/bizsvc-dev:latest
+      - image: harbor.t2cp.com/t2cp-dev/bizsvc-develop:latest
         imagePullPolicy: Always
-        name: bizsvc-dev
+        name: bizsvc-develop
+        volumeMounts:
+        - mountPath: /config.yml
+          name: config
+          subPath: config.yml
+        - mountPath: /static/config.js
+          name: config
+          subPath: config.js
         resources: {}
+      volumes:
+      - configMap:
+          name: config-develop
+        name: config
       dnsPolicy: ClusterFirst
       nodeSelector:
         node: node108
