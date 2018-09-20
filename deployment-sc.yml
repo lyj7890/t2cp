@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: bizsvc-sc
+  name: bizsvc-sc
+  namespace: jenkins
+spec:
+  ports:
+  - port: 9010
+    nodePort: 30012
+    protocol: TCP
+    targetPort: 9010
+  selector:
+    app: bizsvc-sc
+  sessionAffinity: None
+  type: NodePort
+
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: bizsvc-sc
+  name: bizsvc-sc
+  namespace: jenkins
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: bizsvc-sc
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: bizsvc-sc
+    spec:
+      containers:
+      - image: harbor.t2cp.com/t2cp-dev/bizsvc-sc:latest
+        imagePullPolicy: Always
+        name: bizsvc-sc
+        resources: {}
+      dnsPolicy: ClusterFirst
+      nodeSelector:
+        node: node108
+      restartPolicy: Always
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
